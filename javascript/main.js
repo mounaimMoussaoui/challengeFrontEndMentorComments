@@ -19,22 +19,7 @@ let content = JSON.parse(`{
           },
           "username": "amyrobson"
         },
-        "replies": [
-          {
-            "id": 15,
-            "content": "If you're still new, I'd recommend focusing on the fundamentals of HTML, CSS, and JS before considering React. It's very tempting to jump ahead but lay a solid foundation first.",
-            "createdAt": "2 week ago",
-            "score": 4,
-            "replyingTo": "amyrobson",
-            "user": {
-              "image": { 
-                "png": "./images/avatars/image-ramsesmiron.png",
-                "webp": "./images/avatars/image-ramsesmiron.webp"
-              },
-              "username": "mounaim"
-            }
-          }
-        ]
+        "replies": []
       },
       {
         "id": 2,
@@ -136,7 +121,7 @@ function setInform(array) {
             updateScore(array[5] + '-' +(`reply`));
           }
         } else {
-          document.querySelector("div.container div.containerReplying").after(comnt);
+          document.querySelector("div.container").append(comnt);
           updateScore((array[5]));
         }
       } else if(array[5] == ("userReplying-"+array[9])) {
@@ -154,7 +139,7 @@ content.comments.forEach(el => {
     setInform([el.content, el.score, el.createdAt, el.user.username, el.user.image.webp, el.id]);
     if(el.replies.length > 0) {
         el.replies.forEach(e => {
-            let arrUser = [e.content, e.score, e.createdAt, e.user.username, e.user.image.webp, e.id, e.replyingTo,"../images/icon-delete.svg","../images/icon-edit.svg",el.id];
+            let arrUser = [e.content, e.score, e.createdAt, e.user.username, e.user.image.webp, e.id, e.replyingTo,"images/icon-delete.svg","images/icon-edit.svg",el.id];
             setInform(arrUser);
             if(arrUser[3] == content["currentUser"]["username"]) {
               editCurrent(-1, (e.id+ '-' +(`reply`)));
@@ -192,7 +177,7 @@ function addReplyComment(box, id, userName) {
   let btn = box.children[1].children[1];
   btn.addEventListener("click", function(event) {
     let text = box.children[1].children[0].value;
-    let arrUser = [text.slice(text.indexOf(',',0) + 1), 0, "1 second ago", userName, box.children[0].src, id, text.slice(0,text.indexOf(',',0) + 1),"../images/icon-delete.svg","../images/icon-edit.svg",id];
+    let arrUser = [text.slice(text.indexOf(',',0) + 1), 0, "1 second ago", userName, box.children[0].src, id, text.slice(0,text.indexOf(',',0) + 1),"images/icon-delete.svg","images/icon-edit.svg",id];
     setInform(arrUser);
     box.remove();
     edit(-1,(id+ '-' +(`reply`)));
@@ -242,7 +227,7 @@ btnSend.addEventListener("click", function(event) {
   document.querySelector(".container .userReplying form textarea").value = "";
   user = content["currentUser"]["username"];
   compt++;
-  let arrSend  = [text.slice(text.indexOf(',',0) + 1), 0, "1 second ago", user, event.currentTarget.parentElement.parentElement.children[0].src, `${event.currentTarget.parentElement.parentElement.classList[0]}-${compt}`, "", "../images/icon-delete.svg","../images/icon-edit.svg",compt];
+  let arrSend  = [text.slice(text.indexOf(',',0) + 1), 0, "1 second ago", user, event.currentTarget.parentElement.parentElement.children[0].src, `${event.currentTarget.parentElement.parentElement.classList[0]}-${compt}`, "", "images/icon-delete.svg","images/icon-edit.svg",compt];
   setInform(arrSend);
   event.preventDefault();
 });
