@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+  <meta name="description" content="the front end challenge html and css and javascript Interactive comments ">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500;700;900&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>Frontend Mentor | Interactive comments section</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      margin: 0%;
+      padding: 0%;
+    }
+    :root {
+      --Moderate-blue: hsl(238, 40%, 52%);
+      --Soft-Red: hsl(358, 79%, 66%);
+      --Light-grayish-blue: hsl(239, 57%, 85%);
+      --Pale-red: hsl(357, 100%, 86%);
+      --Dark-blue: hsl(212, 24%, 26%);
+      --Grayish-Blue: hsl(211, 10%, 45%);
+      --Light-gray: hsl(223, 19%, 93%);
+      --Very-light-gray: hsl(228, 33%, 97%);
+      --White: hsl(0, 0%, 100%);
+    }
+    .container {
+      margin-block: 60px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 14px;
+    }
+    @media (min-width:668px) {
+      .container {
+        width: 337px;
+      }
+    }
+    @media (min-width:1200px) {
+      .container {
+        width: 1440px;
+      }
+    }
+    body {
+      background-color: var(--Very-light-gray);  
+      scroll-behavior: smooth;
+    }
+    .container {
+      width: 680px;
+      display: grid;
+      grid-template-rows: repeat(auto-fit, minmax(180px,1fr));
+      gap: 35px;
+      margin-inline: auto;
+    }
+    @media (max-width:668px) {
+      .container {
+        width: 100%;
+        overflow: hidden;
+        padding-inline: 10px;
+      }
+    }
+    .containerReplying {
+      display: grid;
+      width: 100%;
+      gap: 35px;
+      position: relative;
+    }
+    .container .containerReplying::before {
+      position: absolute;
+      content: '';
+      left: 40px;
+      bottom: 0px;
+      width: 1.5px;
+      background-color: var(--Light-gray);
+      height: 100%;
+    }
+    @media (max-width:668px) {
+      .container .containerReplying::before {
+        left: 15px;
+      }
+    }
+    .container .comment {
+      display: flex;
+      justify-content: space-evenly;
+      background-color: var(--White);
+      border-radius: 10px;
+      padding: 25px;
+      transition: 0.5s;
+    }
+    .container .comment.replying,
+    .container .userReplying.min-div-comment {
+      right: -80px;
+      position: relative;
+      width: 600px;
+    }
+    @media (max-width:668px) {
+      .container .comment {
+        flex-direction: column-reverse;
+      }
+      .container .comment.replying,
+      .container .userReplying.min-div-comment {
+        width: calc(100% - 30px);
+        right: -30px;
+      }
+    }
+    .container .comment form {
+      position: relative;
+      height: fit-content;
+    }
+    .container .comment form > img {
+      position: absolute;
+      left: 30%;
+      transform: translateX(-50%);
+      cursor: pointer;
+    }
+    .container .comment form img:first-of-type {
+      top: 12%;
+    }
+    .container .comment form img:last-of-type {
+      bottom: 20%;
+    }
+    .container .comment form input {
+      width: 35px;
+      height: 120px;
+      margin-right: 25px;
+      text-align: center;
+      font-weight: bold;
+      color: var(--Moderate-blue);
+      background-color: var(--Light-gray);
+      border: none;
+      outline: none;
+      border-radius: 5px;
+    }
+    @media (max-width:668px) {
+      .container .comment form {
+        width: fit-content;
+      }
+      .container .comment form img:first-of-type {
+        top: 70%;
+        left: 15px;
+        transform: translateY(-70%);
+      }
+      .container .comment form img:last-of-type {
+        top: 65%;
+        transform: translate(-80%,-65%);
+        left: 80%;
+      }
+      .container .comment form input {
+        height: 35px;
+        width: 100px;
+        margin: 10px 0px 0px;
+      }
+    }
+    .container .comment div.content-comment {
+      display: flex;
+      flex-direction: column; 
+      width: 100%;
+    }
+    .container .comment div.content-comment .header-comment {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    .container .comment div.content-comment .header-comment > img {
+      width: 40px;
+    }
+    .container .comment div.content-comment .header-comment span {
+      display: flex;
+      color: var(--Moderate-blue);
+      font-weight: bold;
+      justify-content: space-evenly;
+      align-items: center;
+      transition: 0.3s;
+    }
+    .container .comment div.content-comment .header-comment span:last-child {
+      cursor: pointer;
+    }
+    .container .comment div.content-comment .header-comment span:last-child:hover {
+      color: var(--Light-grayish-blue);
+    }
+    @media (max-width:668px) {
+      .container .comment div.content-comment .header-comment span:last-child {
+        position: relative;
+        right: 20px;
+      }
+      .container .comment div.content-comment .header-comment span:last-child,
+      .container .comment.replying.current div.content-comment .header-comment span:last-child {
+        bottom: calc(-500% + 25px);
+      }
+      .container .comment.replying div.content-comment .header-comment span:last-child {
+        bottom: calc(-560% + 25px);
+      }
+    }
+    .container .comment div.content-comment .header-comment span > img {
+      margin-right: 10px;
+    }
+    .container .comment div.content-comment .header-comment span.name ,
+    .container .comment.replying div.content-comment .header-comment span.name {
+      color: var(--Dark-blue);
+      position: absolute;
+    }
+    .container .comment div.content-comment .header-comment span.name {
+      left: 45px;
+    }
+    .container .comment div.content-comment .header-comment span.name .current {
+      color: var(--White);
+      background: var(--Moderate-blue);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: normal;
+      margin-inline: 6px;
+    }
+    @media (max-width:668px) {
+      .container .comment div.content-comment .header-comment span.name .current {
+        right: 0px;
+      }
+    }
+    .container .comment.replying div.content-comment .header-comment span.nbr-jour-comment,
+    .container .comment div.content-comment .header-comment span.nbr-jour-comment {
+      color: var(--Grayish-Blue);
+      font-weight: normal;
+      position: absolute;
+    }
+    .container .comment div.content-comment .header-comment span.nbr-jour-comment {
+      left: 130px;
+    }
+    .container .comment.replying div.content-comment .header-comment span.nbr-jour-comment {
+      left: 150px;
+    }
+    .container .comment.replying.current div.content-comment .header-comment span.nbr-jour-comment,
+    .container .comment.user.current div.content-comment .header-comment span.nbr-jour-comment {
+      left: 165px;
+    }
+    .container .comment.replying.current div.content-comment .header-comment span.delete,
+    .container .comment.user.current div.content-comment .header-comment span.delete  {
+      position: absolute;
+      right: 70px;
+      color: var(--Soft-Red);
+      cursor: pointer;
+    }
+    @media (max-width:668px) {
+      .container .comment.replying.current div.content-comment .header-comment span.delete,
+      .container .comment.user.current div.content-comment .header-comment span.delete {
+        position: relative;
+        right: -20px;
+        bottom: calc(-500% + 25px);
+      }
+    }
+    .container .comment.replying.current div.content-comment .header-comment span.delete:hover,
+    .container .comment.user.current div.content-comment .header-comment span.delete:hover {
+      color: var(--Pale-red);
+    }
+    .container .comment div.content-comment p {
+      line-height: 1.7;
+      margin-top: 10px;
+      color: var(--Grayish-Blue);
+    }
+    .container .comment div.content-comment p .replying {
+      font-weight: bold;
+      color: var(--Moderate-blue);
+    }
+    .container .userReplying {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: flex-start;
+      background-color: var(--White);
+      border-radius: 5px;
+      padding: 25px;
+      transition: 0.5s;
+    }
+    @media (max-width:668px) {
+      .container .userReplying {
+        flex-direction: column-reverse;
+      }
+    }
+    .container .userReplying img {
+      width: 40px;
+    }
+    @media (max-width:668px) {
+      .container .userReplying img {
+        margin-top: 15px;
+      }
+    }
+    .container .userReplying form {
+      flex: 1;
+      display: flex;
+      justify-content: space-evenly;
+    }
+    @media (max-width:668px) {
+      .container .userReplying form {
+        justify-content: flex-start;
+      }
+    }
+    .container .userReplying form textarea,
+    .container .comment.replying.current div.content-comment textarea,
+    .container .comment.user.current div.content-comment textarea {
+      border: 2px solid var(--Light-gray);
+      border-radius: 5px;
+      width: 80%;
+      text-align: left;
+      color: var(--Dark-blue);
+      padding: 5px 15px;
+      resize: none;
+      outline: none;
+      font-weight: 600;
+      transition: 0.3s;
+      caret-color: var(--Grayish-Blue);
+    }
+    .container .userReplying form textarea {
+      height: 100px;
+    }
+    @media (max-width:668px) {
+      .container .userReplying form textarea {
+        min-width: 110%;
+      }
+      .container .userReplying.min-div-comment form textarea {
+        min-width: 100%;
+      }
+    }
+    .container .comment.replying.current div.content-comment textarea {
+      width: 490px;
+      margin-top: 10px;
+      min-height: 81px;
+      padding: 5px 20px;
+    }
+    .container .comment.user.current div.content-comment textarea {
+      width: 570px;
+      margin-top: 10px;
+      min-height: 81px;
+      padding: 5px 20px;
+    }
+    @media (max-width:668px) {
+      .container .comment.replying.current div.content-comment textarea {
+        width: 130%;
+      }
+      .container .comment.user.current div.content-comment textarea {
+        width: 150%;
+      }
+    }
+    .container .userReplying form textarea:active,
+    .container .userReplying form textarea:hover,
+    .container .comment.replying.current div.content-comment textarea:hover {
+      border: 2px solid var(--Grayish-Blue);
+    }
+    .container .userReplying form input[type='submit'],
+    .container .comment.replying.current div.content-comment input[type='submit'],
+    .container .comment.user.current div.content-comment input[type='submit'] {
+      align-self: start;
+      padding: 10px 20px;
+      background-color: var(--Moderate-blue);
+      border: none;
+      color: var(--White);
+      font-weight: bold;
+      text-transform: uppercase;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    @media (max-width:668px) {
+      .container .userReplying form input[type='submit'] {
+        position: relative;
+        bottom: calc(-145% + 25px);
+        right: 80px;
+      }
+    }
+    .container .comment.replying.current div.content-comment input[type='submit'],
+    .container .comment.user.current div.content-comment input[type='submit'] {
+      margin-top: 10px;
+      margin-left: auto;
+      display: block;
+      width: fit-content;
+      height: 35px;
+    }
+    .container .userReplying form input[type='submit']:hover,
+    .container .comment.replying.current div.content-comment input[type="submit"]:hover,
+    .container .comment.user.current div.content-comment input[type="submit"]:hover {
+      background-color: var(--Light-grayish-blue);
+    }
+    div.deleteBox {
+      display: none;
+      flex-direction: column;
+      background-color: var(--White);
+      max-width: 100%;
+      width: 330px;
+      padding: 15px 20px;
+      border-radius: 10px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+    }
+    div.deleteBox.show {
+      display: flex;
+    }
+    div.deleteBox h3 {
+      margin-top: 5px;
+      color: var(--Dark-blue);
+    }
+    div.deleteBox p {
+      margin-block: 15px;
+      color: var(--Grayish-Blue);
+      line-height: 1.5;
+    }
+    div.deleteBox form {
+      display: flex;
+      align-items: center;
+    }
+    div.deleteBox form input {
+      border: none;
+      outline: none;
+      color: var(--White);
+      padding: 14px 25px;
+      margin-block-end: 0px;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+    div.deleteBox form input[value="NO, CANCEL"] {
+      background-color: var(--Grayish-Blue);
+      margin-right: 25px;
+    }
+    div.deleteBox form input:last-of-type {
+      background-color: var(--Soft-Red);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="comment" id="comment1">
+    <form>
+      <img src="images/icon-plus.svg" alt="+">
+      <input type="text" name="score" readonly class="txtnumber" aria-label="score">
+      <img src="images/icon-minus.svg" alt="-">
+    </form>
+    <div class="content-comment">
+      <div class="header-comment">
+        <img src="" alt="photo user" class="user">
+        <span class="name"></span>
+        <span class="nbr-jour-comment"></span>
+        <span class="Reply"><img src="images/icon-reply.svg" alt="icon"> Reply</span>
+      </div>
+      <p class="para"></p>
+    </div>
+  </div>
+</div>
+<div class="deleteBox">
+  <h3>Delete comment</h3>
+  <p>are you sure you want to delete this comment? This will remove the comment and can't be undone</p>
+  <form>
+    <input type="submit" value="NO, CANCEL">
+    <input type="submit" value="YES, DELETE">
+  </form>
+</div>
+  <script src="javascript/main.js"></script>
+</body>
+</html>
