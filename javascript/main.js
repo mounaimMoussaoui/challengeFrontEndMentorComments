@@ -344,7 +344,7 @@ function currentAddComment(newComment = {}) {
       imgDelete.alt = "img Delete";
       ///icon EDIT
       let imgEdit = document.createElement("img");
-      imgEdit.src = "../images/icon-edit.svg";
+      imgEdit.src = "images/icon-edit.svg";
       imgEdit.alt = "img Edit";
     //create Buttons elements and add to him our content
     let btnDelete = document.createElement("button");
