@@ -1,337 +1,474 @@
-let content = JSON.parse(`{
-    "currentUser": {
-      "image": { 
-        "png": "./images/avatars/image-juliusomo.png",
-        "webp": "./images/avatars/image-juliusomo.webp"
-      },
-      "username": "juliusomo"
-    },
-    "comments": [
-      {
-        "id": 1,
-        "content": "Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You've nailed the design and the responsiveness at various breakpoints works really well.",
-        "createdAt": "1 month ago",
-        "score": 12,
-        "user": {
-          "image": { 
-            "png": "./images/avatars/image-amyrobson.png",
-            "webp": "./images/avatars/image-amyrobson.webp"
-          },
-          "username": "amyrobson"
-        },
-        "replies": []
-      },
-      {
-        "id": 2,
-        "content": "Woah, your project looks awesome! How long have you been coding for? I'm still new, but think I want to dive into React as well soon. Perhaps you can give me an insight on where I can learn React? Thanks!",
-        "createdAt": "2 weeks ago",
-        "score": 5,
-        "user": {
-          "image": { 
-            "png": "./images/avatars/image-maxblagun.png",
-            "webp": "./images/avatars/image-maxblagun.webp"
-          },
-          "username": "maxblagun"
-        },
-        "replies": [
-          {
-            "id": 3,
-            "content": "If you're still new, I'd recommend focusing on the fundamentals of HTML, CSS, and JS before considering React. It's very tempting to jump ahead but lay a solid foundation first.",
-            "createdAt": "1 week ago",
-            "score": 4,
-            "replyingTo": "maxblagun",
-            "user": {
-              "image": { 
-                "png": "./images/avatars/image-ramsesmiron.png",
-                "webp": "./images/avatars/image-ramsesmiron.webp"
-              },
-              "username": "ramsesmiron"
-            }
-          },
-          {
-            "id": 4,
-            "content": "I couldn't agree more with this. Everything moves so fast and it always seems like everyone knows the newest library/framework. But the fundamentals are what stay constant.",
-            "createdAt": "2 days ago",
-            "score": 2,
-            "replyingTo": "ramsesmiron",
-            "user": {
-              "image": { 
-                "png": "./images/avatars/image-juliusomo.png",
-                "webp": "./images/avatars/image-juliusomo.webp"
-              },
-              "username": "juliusomo"
-            }
-          }
-        ]
-      }
-    ]
-  }
-`);
+function thePlusReaction(e) {
+  let theLastRec = +e.target.nextSibling.textContent;
+  e.target.parentElement.childNodes[1].textContent = `${theLastRec + 1}`;
+  // console.log(e.target.parentElement.childNodes[1].textContent, theLastRec);
+}
 
-function setInform(array) {
-  if(array[5] == 1 && array.length == 6) {
-    document.getElementById("comment1").id = array[5];
-    document.querySelector('p.para').textContent = array[0]
-    document.querySelector('img.user').src = array[4];
-    document.querySelector('form input[type="text"]').value = array[1];
-    document.querySelector('span.name').textContent = array[3];
-    document.querySelector('span.nbr-jour-comment').textContent = array[2];
-    updateScore((array[5]));
-  } else {
-      let comnt = document.getElementById('1').cloneNode(true);
-      comnt.children[0].children[1].value = array[1];
-      if(array.length === 10) {
-        array[6].length ? comnt.classList.add("replying") : comnt.classList.add("user");
-        if(array[6].includes("@") || array[6] == "") {
-          comnt.children[1].children[1].innerHTML = `<span class="replying">${array[6]}</span> ${array[0]}`;
+function theMinusReaction(e) {
+  let theLastRec = +e.target.previousSibling.textContent;
+  e.target.parentElement.childNodes[1].textContent = `${theLastRec - 1}`;
+  // console.log(e.target.parentElement.childNodes[1].textContent, theLastRec);
+}
+
+//create replies Comments 
+function addRepliesComment(arrReplies = [], idOwner, currentUser) {
+  //create container for replies 
+  let theContainerReplies = document.createElement("div");
+    theContainerReplies.className = "container-replies";
+    theContainerReplies.classList.add(`container-replies-${idOwner}`);
+    document.getElementById(idOwner).after(theContainerReplies);
+    arrReplies.forEach((el) => {
+       //create the Parent of the all elements commenter
+        let theBoxComment = document.createElement("div");
+        theBoxComment.className = "box-comment";
+        theBoxComment.setAttribute("id", `${el.id}`);
+        
+        if(el.user.username === currentUser.username)
+          theBoxComment.classList.add("currentUser");
+
+        // create the reaction parte of the box
+        let theSpan = document.createElement("span");
+        theSpan.className = "comment-reaction";
+
+        //create text node for the span
+        let textSpan = document.createTextNode(`${el.score}`);
+
+        let plusImg = document.createElement("img");
+        plusImg.src = "images/icon-plus.svg";
+        plusImg.alt = "img plus";
+        plusImg.id = `imgPlus${el.id}`;
+        let minusImg = document.createElement("img");
+        minusImg.src = "images/icon-minus.svg";
+        minusImg.alt = "img minus";
+        minusImg.id = `imgMinus${el.id}`;
+
+        //add all the elements to the Parent
+        theSpan.append(plusImg, textSpan, minusImg);
+
+        //create the content for box commenter
+          ///header
+          let ownerImg = document.createElement("img");
+          ownerImg.src = `${el.user.image.webp}`;
+          ownerImg.alt = "owner Comment";
+          ownerImg.className = "ownerImg";
+          let ownerName = document.createElement("span");
+          ownerName.className = "name";
+          ownerName.innerHTML = `${el.user.username}`;
+          let dateSpan = document.createElement("span");
+          dateSpan.className = "dateComment";
+          dateSpan.innerHTML = `${el.createdAt}`;
+        
+        //create parent of content header
+        let headComment = document.createElement("div");
+        headComment.className = "headComment";
+        
+        if(el.user.username === currentUser.username) {
+          let current = document.createElement("span");
+          current.className = "current";
+          current.innerHTML = "you";
+          headComment.append(ownerImg, ownerName, current, dateSpan);
         } else {
-          comnt.children[1].children[1].innerHTML = `<span class="replying">@${array[6]}</span> ${array[0]}`;
+          ///add elements header to parent
+          headComment.append(ownerImg, ownerName, dateSpan);
         }
-      } else {
-          comnt.children[1].children[1].textContent = array[0];
-      }
-      comnt.children[1].children[0].children[0].src = array[4];
-      if(array[3] == content["currentUser"]["username"]) {
-          comnt.classList.add("current");
-          comnt.children[1].children[0].children[1].innerHTML = `${array[3]} <span class="current">you</span>`;
-          comnt.children[1].children[0].children[3].innerHTML = `<img src=${array[7]} alt="icon"> Delete`;
-          comnt.children[1].children[0].children[3].className = "delete";
-          comnt.children[1].children[0].innerHTML += `<span class="edit"><img src=${array[8]} alt="icon"> Edit</span>`;     
-      } else {
-          comnt.children[1].children[0].children[1].textContent = array[3];
-      }
-      comnt.children[1].children[0].children[2].textContent = array[2];
-      if(comnt.classList.contains("replying")) {
-        comnt.id = array[5] + '-' +(`reply`);
-      } else {
-        comnt.id = array[5];
-      }
-      if(array[1] != 0) {
-        if(comnt.classList.contains("replying")) {
-          let ownerReplying = document.getElementById(array[9]);
-          if(ownerReplying.nextElementSibling == null) {
-            let divConatReplying = document.createElement("div");
-            divConatReplying.className = "containerReplying";
-            divConatReplying.append(comnt)
-            ownerReplying.after(divConatReplying);
-            updateScore(array[5] + '-' +(`reply`));
-          }
-          else {
-            ownerReplying.nextElementSibling.append(comnt);
-            updateScore(array[5] + '-' +(`reply`));
-          }
+          ///Content
+          let textContent = document.createElement("p");
+          textContent.id ="ReplyComment";
+          textContent.innerHTML = `<span class="replyTo">@${el.replyingTo}</span>,  ${el.content}`;
+        
+        //parent of the elements the content
+        let contentComment = document.createElement("div");
+        contentComment.className ="content-Comment";
+        contentComment.append(headComment, textContent);
+
+        if(el.user.username === currentUser.username) {
+          //Create buttons DELETE & EDIT 
+          let theBtnContainer = document.createElement("div");
+          theBtnContainer.className = "controls-btn";
+            ///icon DELETE
+            let imgDelete = document.createElement("img");
+            imgDelete.src = "images/icon-delete.svg";
+            imgDelete.alt = "img Delete";
+            ///icon EDIT
+            let imgEdit = document.createElement("img");
+            imgEdit.src = "../images/icon-edit.svg";
+            imgEdit.alt = "img Edit";
+          //create Buttons elements and add to him our content
+          let btnDelete = document.createElement("button");
+            btnDelete.type = "button";
+            btnDelete.className = "btn-delete";
+          let btnEdit = document.createElement("button");
+            btnEdit.type = "button";
+            btnEdit.className = "btn-edit";
+          //Create text buttons 
+          let textBtnDel = document.createTextNode("Delete");
+          btnDelete.append(imgDelete, textBtnDel);
+          //Create text buttons 
+          let textBtnEdit = document.createTextNode("Edit");
+          btnEdit.append(imgEdit, textBtnEdit);
+          //Add buttons to him parent
+          theBtnContainer.append(btnDelete, btnEdit);
+
+          //add all elements of Comments to the his parent
+          theBoxComment.append(theSpan, contentComment, theBtnContainer);
         } else {
-          document.querySelector("div.container").append(comnt);
-          updateScore((array[5]));
+          //create button Reply and him content
+          let btnReply = document.createElement("button");
+          btnReply.type = "button";
+            ///icon reply
+            let imgReply = document.createElement("img");
+            imgReply.src = "images/icon-reply.svg";
+            imgReply.alt = "img Reply";
+            ///text node the button
+            let textBtn = document.createTextNode("Reply");
+
+          btnReply.append(imgReply, textBtn);
+          //add all elements of Comments to the his parent
+          theBoxComment.append(theSpan, contentComment, btnReply);
         }
-      } else if(array[5] == ("userReplying-"+array[9])) {
-        document.querySelector("div.container .userReplying").before(comnt);
-        edit(-1,(array[5]));
-        deleteUserComment();
-        updateScore(array[5]);
-      } else {
-        !isNaN(array[9]) ? document.getElementById(array[5]).nextElementSibling.append(comnt) : document.getElementById(array[5]).after(comnt);
-      }
-  }
-}
-
-content.comments.forEach(el => {
-    setInform([el.content, el.score, el.createdAt, el.user.username, el.user.image.webp, el.id]);
-    if(el.replies.length > 0) {
-        el.replies.forEach(e => {
-            let arrUser = [e.content, e.score, e.createdAt, e.user.username, e.user.image.webp, e.id, e.replyingTo,"images/icon-delete.svg","images/icon-edit.svg",el.id];
-            setInform(arrUser);
-            if(arrUser[3] == content["currentUser"]["username"]) {
-              editCurrent(-1, (e.id+ '-' +(`reply`)));
-            }
-        })
-    }
-});
-
-function updateScore(id) {
-  let btnsPuls = document.querySelectorAll(".comment form img[alt='+']");
-  let btnsMins = document.querySelectorAll(".comment form img[alt='-']");
-  for(let j = 0; j < btnsPuls.length; j++) {
-    console.log(btnsPuls[j].parentElement.parentElement.id);
-    if(id == btnsPuls[j].parentElement.parentElement.id) {
-      btnsPuls[j].addEventListener("click", function(event) {
-        event.currentTarget.parentElement.children[1].value = `${parseInt(event.currentTarget.parentElement.children[1].value) + 1}`;
-      });
-      break;
-    }
-}
-  for(let j = 0; j < btnsMins.length; j++) {
-      console.log(btnsMins[j].parentElement.parentElement.id);
-      if(id == btnsMins[j].parentElement.parentElement.id) {
-        btnsMins[j].addEventListener("click", function(event) {
-          if(parseInt(event.currentTarget.parentElement.children[1].value) > 0) {
-            event.currentTarget.parentElement.children[1].value = `${parseInt(event.currentTarget.parentElement.children[1].value) - 1}`;
-          }
-        });
-        break;
-      }
-  }
-}
-
-function addReplyComment(box, id, userName) {
-  let btn = box.children[1].children[1];
-  btn.addEventListener("click", function(event) {
-    let text = box.children[1].children[0].value;
-    let arrUser = [text.slice(text.indexOf(',',0) + 1), 0, "1 second ago", userName, box.children[0].src, id, text.slice(0,text.indexOf(',',0) + 1),"images/icon-delete.svg","images/icon-edit.svg",id];
-    setInform(arrUser);
-    box.remove();
-    edit(-1,(id+ '-' +(`reply`)));
-    deleteUserComment();
-    updateScore((id+ '-' +(`reply`)));
-    event.preventDefault();
-  });
-}
-
-function addUserComments(reply, id) {
-  let src = [content["currentUser"].image.webp];
-  let cont = document.createElement("div");
-  let form = document.createElement("form");
-  let textarea = document.createElement("textarea");
-  let inputSend = document.createElement("input");
-  let img = document.createElement("img");
-  textarea.setAttribute("placeholder","Add a comment...");
-  inputSend.setAttribute("type","submit");
-  inputSend.setAttribute("value","send");
-  form.append(textarea,inputSend);
-  img.setAttribute("src",src);
-  img.setAttribute("alt","photo user");
-  cont.className = "userReplying";
-  cont.append(img,form);
-  if(reply == "" && id == 0) {
-    document.querySelector("div.container").append(cont);
-  } else {
-    let divComment = document.getElementById(id);
-    cont.children[1].children[1].value = `REPLY`;
-    cont.children[1].children[0].value = `@${divComment.children[1].children[0].children[1].textContent}, `;
-    if(!isNaN(id)) {
-      cont.classList.add("min-div-comment");
-      divComment.nextElementSibling.append(cont);
-    } else {
-      cont.classList.add("min-div-comment");
-      divComment.after(cont);
-    }
-    addReplyComment(cont, id, content["currentUser"]["username"]);
-  }
-}
-
-addUserComments("",0);
-
-let btnSend = document.querySelector(".container .userReplying form input[type='submit']"), compt = 0;
-btnSend.addEventListener("click", function(event) {
-  let text = document.querySelector(".container .userReplying form textarea").value;
-  document.querySelector(".container .userReplying form textarea").value = "";
-  user = content["currentUser"]["username"];
-  compt++;
-  let arrSend  = [text.slice(text.indexOf(',',0) + 1), 0, "1 second ago", user, event.currentTarget.parentElement.parentElement.children[0].src, `${event.currentTarget.parentElement.parentElement.classList[0]}-${compt}`, "", "images/icon-delete.svg","images/icon-edit.svg",compt];
-  setInform(arrSend);
-  event.preventDefault();
-});
-
-let commentRep = document.querySelectorAll("div.header-comment span.Reply");
-commentRep.forEach((el) => {
-  let cpt = -1;
-  el.addEventListener("click", function(event) {
-      cpt++;
-      if(cpt == 0) {
-        addUserComments("Replay", el.parentElement.parentElement.parentElement.id);
-      } else {
-        event.preventDefault();
-      }
+        document.querySelector(`.container-replies-${idOwner}`).appendChild(theBoxComment);
+        document.getElementById(`imgPlus${el.id}`).onclick = (e) => thePlusReaction(e);
+        document.getElementById(`imgMinus${el.id}`).addEventListener("click", (e) => theMinusReaction(e));
     });
-});
-
-function updateComment(comment) {
-  let updatebtn = comment.children[1].children[1].children[1];
-  updatebtn.addEventListener("click", function(event) {
-    let text = comment.children[1].children[1].children[0].value;
-    comment.children[1].children[2].innerHTML = `${text}`;
-    comment.children[1].children[2].style.display = `block`;
-    event.currentTarget.parentElement.style.display = 'none';
-    event.preventDefault();
-  });
 }
 
-function editComment(compt, parent) {
-  let commntCurrent = parent;
-  if(compt == 0 ) {
-    let para = commntCurrent.children[1].children[1];
-    let form = document.createElement("form");
-    let updatebtn = document.createElement("input");
-    let textArea = document.createElement("textarea");
-    updatebtn.setAttribute("type","submit");
-    updatebtn.setAttribute("value","UPDATE");
-    textArea.value = `${para.textContent}`;
-    form.append(textArea,updatebtn);
-    commntCurrent.children[1].children[0].after(form);
-    para.style.display = "none";
-    updateComment(commntCurrent);
-  } else if(compt > 0) {
-    let para = commntCurrent.children[1].children[2];
-    commntCurrent.children[1].children[1].style.display = "";
-    commntCurrent.children[1].children[1].children[0].value = `${para.textContent}`;
-    para.style.display = "none";
-    updateComment(commntCurrent);
-  }
+function removeOrCancel(boxDelete) {
+  document.querySelectorAll("#boxDeleteComment button").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      if(e.currentTarget.classList.contains("btn-delete")) {
+        document.getElementById("boxDeleteComment").classList.remove("show");
+        boxDelete.remove();
+      } else if(e.currentTarget.classList.contains("btn-cancel")) {
+        document.getElementById("boxDeleteComment").classList.remove("show");
+      }
+    })
+  });;
 }
 
-function editCurrent(cptCurrent, id) {
-  let editBtn = document.querySelectorAll("div.current div.header-comment span.edit");
-  for(let i = 0; i < editBtn.length; i++) {
-    if(editBtn[i].parentElement.parentElement.parentElement.id == id && editBtn[i] == editBtn[editBtn.length - 1]) {
-      editBtn[i].addEventListener("click", function(event) {
-        cptCurrent += 1;
-        editComment(cptCurrent, event.currentTarget.parentElement.parentElement.parentElement);
-        // console.log(id, editBtn[i].parentElement.parentElement.parentElement, cptCurrent);
-      });
-      break;
-    }
-  }
-}
-
-function edit(cptRepFun, id) {
-  let editBtn = document.querySelectorAll("div.current div.header-comment span.edit");
-    console.log(editBtn, false);
-    for(let i = 0; i < editBtn.length; i++) {
-    if(editBtn[i].parentElement.parentElement.parentElement.id == id) {
-      editBtn[i].addEventListener("click", function(event) {
-          cptRepFun += 1;
-          editComment(cptRepFun, event.currentTarget.parentElement.parentElement.parentElement);
-          // console.log(id, editBtn[i].parentElement.parentElement.parentElement, cptRepFun);
-      });
-      break;
-    } 
-  }
-}
-
-function deleteComment(boxDel,boxComment) {
-  boxDel.children[2].children[0].addEventListener("click", function(ev) {
-    boxDel.classList.remove("show");
-    boxDel.previousElementSibling.style.opacity = 1;
-    ev.preventDefault();
-  });
-  boxDel.children[2].children[1].addEventListener("click", function(ev) {
-      boxDel.previousElementSibling.style.opacity = 1;
-      boxDel.classList.remove("show");
-      boxComment.remove();
-      ev.preventDefault();
-  });
-}
-
-function deleteUserComment() {
-let deleteBtn = document.querySelectorAll("div.current div.header-comment span.delete");
-let boxDelete = document.querySelector("div.deleteBox");
-  deleteBtn.forEach((delBtn) => {
-      delBtn.addEventListener("click", function() {
-        boxDelete.classList.add("show");
-        boxDelete.previousElementSibling.style.opacity = 0.2;
-        deleteComment(boxDelete,delBtn.parentElement.parentElement.parentElement);
+//button remove owner comments or Replies
+function deleteButtons(arrBtn) {
+  arrBtn.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      document.getElementById("boxDeleteComment").classList.add("show");
+      removeOrCancel(e.currentTarget.parentElement.parentElement);
+      // e.currentTarget.parentElement.parentElement.remove();
     });
   });
 }
 
-deleteUserComment();
+/*gets the edited content and put him in the paragraph and remove
+  the form edit and give the access to owner for edit another times*/
+function updateContentComment(e) {
+  let theContentComment = document.getElementById("textContentEdit");
+  let replyingTo = theContentComment.getAttribute("data-replyingTo");
+  e.currentTarget.parentElement.children[1].innerHTML = `<span class="replyTo">${replyingTo}</span> ${theContentComment.value.slice(replyingTo.length)}`;
+  e.currentTarget.parentElement.children[1].style.display = "block";
+  e.currentTarget.parentElement.classList.remove("inTheEditing");
+  theContentComment.remove();
+  e.target.remove();
+}
+//prepare the form for editing comment the owner user
+function editButtons(arrBtnEdit) {
+  arrBtnEdit.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const theEleContent = e.currentTarget.parentElement.previousElementSibling;
+
+      if(theEleContent.classList.contains("inTheEditing")) 
+        return 0;
+
+      const theEleContentComment = theEleContent.children[1];
+      let replyingTo = theEleContentComment.children[0].textContent;
+      const textArea = document.createElement("textarea");
+            textArea.name = "contentEdit";
+            textArea.width = "100%";
+            textArea.height = "100%";
+            textArea.cols = "80";
+            textArea.rows = "6";
+            textArea.setAttribute("data-replyingTo", `${replyingTo}`);
+            textArea.value = theEleContentComment.textContent;
+            textArea.className = "text-edit";
+            textArea.id = "textContentEdit";
+      const theUpdateBtn = document.createElement("button");
+            theUpdateBtn.className = "btn-update";
+            theUpdateBtn.type ="button";
+            theUpdateBtn.textContent = "UPDATE";
+            theUpdateBtn.id = "btnUpdateComment";
+      theEleContentComment.style.display = "none";
+      theEleContent.append(textArea, theUpdateBtn);
+      theEleContent.classList.add("inTheEditing");
+      document.getElementById("btnUpdateComment").onclick = (e) => updateContentComment(e);
+    });
+  });
+}
+
+//create comments add them to the container 
+function createComment(arrComments = [], currentUser) {
+  arrComments.forEach((el) => {
+    //create the Parent of the all elements commenter
+    let theBoxComment = document.createElement("div");
+    theBoxComment.className = "box-comment";
+    theBoxComment.setAttribute("id", `${el.id}`);
+
+    // create the reaction parte of the box
+    let theSpan = document.createElement("span");
+    theSpan.className = "comment-reaction";
+
+    //create text node for the span
+    let textSpan = document.createTextNode(`${el.score}`);
+
+    let plusImg = document.createElement("img");
+    plusImg.src = "images/icon-plus.svg";
+    plusImg.alt = "img plus";
+    plusImg.id = `plusImg${el.id}`;
+    let minusImg = document.createElement("img");
+    minusImg.src = "images/icon-minus.svg";
+    minusImg.alt = "img minus";
+    minusImg.id = `minusImg${el.id}`;
+    //add all the elements to the Parent
+    theSpan.append(plusImg, textSpan, minusImg);
+
+    //create the content for box commenter
+      ///header
+      let ownerImg = document.createElement("img");
+      ownerImg.src = `${el.user.image.webp}`;
+      ownerImg.alt = "owner Comment";
+      ownerImg.className = "ownerImg";
+      let ownerName = document.createElement("span");
+      ownerName.className = "name";
+      ownerName.innerHTML = `${el.user.username}`;
+      let dateSpan = document.createElement("span");
+      dateSpan.className = "dateComment";
+      dateSpan.innerHTML = `${el.createdAt}`;
+    //create parent of content header
+      let headComment = document.createElement("div");
+      headComment.className = "headComment";
+      ///add elements header to parent
+      headComment.append(ownerImg, ownerName, dateSpan);
+      ///Content
+      let txtareaContent = document.createElement("p");
+      txtareaContent.id ="ReplyComment";
+      txtareaContent.innerHTML = `${el.content}`;
+    
+    //parent of the elements the content
+    let contentComment = document.createElement("div");
+    contentComment.className ="content-Comment";
+    contentComment.append(headComment, txtareaContent);
+
+    //create button Reply and him content
+    let btnReply = document.createElement("button");
+    btnReply.type = "button";
+      ///icon reply
+      let imgReply = document.createElement("img");
+      imgReply.src = "images/icon-reply.svg";
+      imgReply.alt = "img Reply";
+      ///text node the button
+      let textBtn = document.createTextNode("Reply");
+
+    btnReply.append(imgReply, textBtn);
+    //add all elements of Comments to the him parent
+      theBoxComment.append(theSpan, contentComment, btnReply);
+      ///add all box Comment to the parent Container
+      document.querySelector(".owner-form-reply").before(theBoxComment);
+      document.getElementById(`plusImg${el.id}`).onclick = (e) => thePlusReaction(e);
+      document.getElementById(`minusImg${el.id}`).addEventListener("click", (e) => theMinusReaction(e));
+      ///add replies it's exists
+      if(el.replies.length > 0) {
+        addRepliesComment(el.replies, el.id, currentUser);
+      // add Event click to the buttons Delete And Edit
+        ////get all buttons Edit exist
+        const arrBtnDeletes = document.querySelectorAll(".box-comment .controls-btn .btn-delete");
+        ///Invoked func Delete
+        deleteButtons(arrBtnDeletes);
+        ////get all buttons Edit exist
+        const arrBtnEdit = document.querySelectorAll(".box-comment .controls-btn .btn-edit");
+        ///Invoked func Edit
+        editButtons(arrBtnEdit);
+    }
+  });
+}
+
+//create new Comments for the current user 
+function currentAddComment(newComment = {}) {
+    //create the Parent of the all elements commenter
+    let theBoxComment = document.createElement("div");
+    theBoxComment.className = "box-comment";
+    theBoxComment.classList.add("currentUser");
+    // create the reaction parte of the box
+    let theSpan = document.createElement("span");
+    theSpan.className = "comment-reaction";
+    //create text node for the span
+    let textSpan = document.createTextNode("0");
+    let plusImg = document.createElement("img");
+    plusImg.src = "images/icon-plus.svg";
+    plusImg.alt = "img plus";
+    plusImg.id = `imgPlus${newComment.id}`;
+    let minusImg = document.createElement("img");
+    minusImg.src = "images/icon-minus.svg";
+    minusImg.alt = "img minus";
+    minusImg.id = `imgMinus${newComment.id}`
+    //add all the elements to the Parent
+    theSpan.append(plusImg, textSpan, minusImg);
+    //create the content for box commenter
+      ///header
+      let ownerImg = document.createElement("img");
+      ownerImg.src = `${newComment.img}`;
+      ownerImg.alt = "owner Comment";
+      ownerImg.className = "ownerImg";
+      let ownerName = document.createElement("span");
+      ownerName.className = "name";
+      ownerName.innerHTML = `${newComment.username}`;
+      let dateSpan = document.createElement("span");
+      dateSpan.className = "dateComment";
+      dateSpan.innerHTML = `${newComment.createdAt}`;
+    //create parent of content header
+    let headComment = document.createElement("div");
+    headComment.className = "headComment";
+    let current = document.createElement("span");
+    current.className = "current";
+    current.innerHTML = "you";
+    headComment.append(ownerImg, ownerName, current, dateSpan);
+      ///Content
+      let textContent = document.createElement("p");
+      textContent.id ="ReplyComment";
+      textContent.innerHTML = `<span class="replyTo">${newComment.replyTo}</span> ${newComment.content}`;
+    //parent of the elements the content
+    let contentComment = document.createElement("div");
+    contentComment.className ="content-Comment";
+    contentComment.append(headComment, textContent);
+    //Create buttons DELETE & EDIT 
+    let theBtnContainer = document.createElement("div");
+    theBtnContainer.className = "controls-btn";
+      ///icon DELETE
+      let imgDelete = document.createElement("img");
+      imgDelete.src = "images/icon-delete.svg";
+      imgDelete.alt = "img Delete";
+      ///icon EDIT
+      let imgEdit = document.createElement("img");
+      imgEdit.src = "../images/icon-edit.svg";
+      imgEdit.alt = "img Edit";
+    //create Buttons elements and add to him our content
+    let btnDelete = document.createElement("button");
+    btnDelete.type = "button";
+    btnDelete.className = "btn-delete";
+    let btnEdit = document.createElement("button");
+    btnEdit.type = "button";
+    btnEdit.className = "btn-edit";
+    //Create text buttons 
+    let textBtnDel = document.createTextNode("Delete");
+    btnDelete.append(imgDelete, textBtnDel);
+    //Create text buttons 
+    let textBtnEdit = document.createTextNode("Edit");
+    btnEdit.append(imgEdit, textBtnEdit);
+    //Add buttons to him parent
+    theBtnContainer.append(btnDelete, btnEdit);
+    //add all elements of Comments to the his parent
+    theBoxComment.append(theSpan, contentComment, theBtnContainer);
+
+    document.querySelector(".owner-form-reply").before(theBoxComment);
+    document.getElementById(`imgPlus${newComment.id}`).onclick = (e) => thePlusReaction(e);
+    document.getElementById(`imgMinus${newComment.id}`).addEventListener("click", (e) => theMinusReaction(e));
+    // add Event click to the buttons Delete And Edit
+      ////get all buttons delete exist
+      const arrBtnDeletes = document.querySelectorAll(".box-comment .controls-btn .btn-delete");
+      ///Invoked func Delete
+      deleteButtons(arrBtnDeletes);
+      ////get all buttons Edit exist
+      const arrBtnEdit = document.querySelectorAll(".box-comment .controls-btn .btn-edit");
+      ///Invoked func Edit
+      editButtons(arrBtnEdit);
+}
+
+//calc the time passed before created the comments
+// function calcDateCreated() {
+//   let dateCreates = new Date();
+//   let milDateCreates = Date.parse(dateCreates);
+//   let date = 0;
+//   let createdAT = "";
+//   let countDateOfComment = setInterval(() => {
+//     let dateNow = Date.now();
+//     date = dateNow - milDateCreates;
+//     let leftTime = Math.round(date / 1000);
+
+//     if(leftTime < 60) {
+//       createdAT = `${leftTime} s`;
+//     } else if((leftTime / 60) < 60 ) {
+//       createdAT = `${Math.trunc(leftTime / 60)} M`;
+//     }  else if((leftTime / 120) < 24 ) {
+//       createdAT = `do have ${Math.trunc(leftTime / 120)} Hour`;
+//     }
+
+//   }, 1000);
+//   return createdAT;
+// }
+
+function AddContentCommentReply(e) {
+  //get the text Area next to the button Clicked
+  let textContentComment = e.currentTarget.previousElementSibling.children[0];
+  let replyingTo = textContentComment.getAttribute("data-replyingTo");
+  if(textContentComment.value.trim() === "" || textContentComment.value === replyingTo)
+    return 0;
+
+  let theCountCommentBox = document.querySelectorAll(".box-comment").length;
+  const newComment = {
+    id:  theCountCommentBox + 1,
+    img:"images/avatars/image-juliusomo.webp",
+    username: "juliusomo",
+    createdAt: "now",
+    content: textContentComment.value.slice(replyingTo.length),
+    replyTo: replyingTo,
+  }
+
+  currentAddComment(newComment);
+  textContentComment.value = "";
+  //get value the box comment if below him exist a box reply
+  if(textContentComment.getAttribute("id").startsWith("contentReplyComment")) {
+    //remove the box reply
+    textContentComment.parentElement.parentElement.remove();
+    //remove the class for give to the user add new reply box if him want
+    const theCommentBox = document.querySelector("div.box-comment.have-replayBox");
+    theCommentBox.classList.remove("have-replayBox");
+  }
+}
+
+let btnSend = document.getElementById("btnSend");
+btnSend.onclick = (e) => AddContentCommentReply(e);
+
+//Add Reply Form gave to an owner permission to put his reply on they comment 
+function createReplay(listBtn) {
+  listBtn.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      //get the parent => (box comment) of the clicked button
+      const theParentBtn = e.currentTarget.parentElement;
+      /* search in the list class the comment-box if has it this 
+      class the reply box is exist under the comment box */ 
+      if(theParentBtn.classList.contains("have-replayBox")) 
+        return 0;
+      
+      const replyTo = `@${theParentBtn.children[1].children[0].children[1].textContent}`;
+      const thIdParent = theParentBtn.getAttribute("id");
+      const theReplyBox = document.querySelector(".owner-form-reply").cloneNode(true);
+      theReplyBox.classList.add(`comment-reply-${thIdParent}`);
+      theReplyBox.children[1].children[0].id = `contentReplyComment${thIdParent}`;
+      theReplyBox.children[1].children[0].value = replyTo;
+      theReplyBox.children[1].children[0].setAttribute("data-replyingTo", replyTo);
+      theReplyBox.children[2].value = "REPLY";
+      theReplyBox.children[2].id = `btnReplyComment${thIdParent}`;
+      theParentBtn.after(theReplyBox);
+      theParentBtn.classList.add("have-replayBox");
+      document.getElementById(`btnReplyComment${thIdParent}`).onclick = (e) => AddContentCommentReply(e);
+    });
+  });
+}
+
+// get data with fetch Method
+fetch("../data.json")
+.then((res) => {
+  return res.json();
+})
+.then((data) => {
+  // console.log(data);
+  createComment(data.comments, data.currentUser);
+  //after create the box comment get all buttons reply 
+  const listBtnReplies = document.querySelectorAll("div.box-comment > button");
+  createReplay(listBtnReplies);
+});

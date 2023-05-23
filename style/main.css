@@ -1,0 +1,368 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0%;
+  padding: 0%;
+}
+
+:root {
+  --Moderate-blue: hsl(238, 40%, 52%);
+  --Soft-Red: hsl(358, 79%, 66%);
+  --Light-grayish-blue: hsl(239, 57%, 85%);
+  --Pale-red: hsl(357, 100%, 86%);
+  --Dark-blue: hsl(212, 24%, 26%);
+  --Grayish-Blue: hsl(211, 10%, 45%);
+  --Light-gray: hsl(223, 19%, 93%);
+  --Very-light-gray: hsl(228, 33%, 97%);
+  --White: hsl(0, 0%, 100%);
+}
+
+body {
+    background-color: var(--Very-light-gray);  
+    scroll-behavior: smooth;
+}
+
+.container {
+  margin: 70px auto;
+  font-family: 'Rubik', sans-serif;
+  font-size: 14px;
+  display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0px 15px;  
+}
+
+@media (min-width:768px) {
+  .container {
+    width: 750px;
+  }
+}
+
+  @media (min-width:992px) {
+    .container {
+      width: 970px;
+    }
+  }
+
+
+@media (min-width:1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+
+.container .box-comment {
+    display: flex;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    gap: 15px;
+    align-items: start;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+    .container .box-comment {
+        align-items: center;
+    }
+}
+
+.container .box-comment span.comment-reaction {
+    background-color: var(--Very-light-gray);
+    min-width: 40px;
+    min-height: 80px;
+    display: flex;
+    padding: 10px;
+    border-radius: 5px;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    align-items: center;
+    line-height: 60px;
+    margin: auto 0px;
+    color: var(--Moderate-blue);
+}
+
+.container .box-comment span.comment-reaction img {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.container .box-comment span.comment-reaction img:hover {
+  filter: hue-rotate(-80deg);
+}
+
+.container .box-comment .content-Comment {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .container .box-comment span.comment-reaction {
+        width: 90px;
+        min-height: auto;
+        flex-direction: row;
+        line-height: normal;
+    }
+    .container .box-comment .content-Comment {
+        order: -1;
+        flex-basis: 100%;
+    }
+}
+
+.container .box-comment .content-Comment .headComment {
+    color: hsl(211, 10%, 45%);
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+    flex: 100%;
+}
+
+.container .box-comment .content-Comment .headComment img.ownerImg {
+    width: 35px;
+}
+
+.container .box-comment.currentUser .content-Comment .headComment .current {
+    background-color: var(--Moderate-blue);
+    color: var(--White);
+    font-weight: bold;
+    height: 20px;
+    width: 35px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 2px;
+}
+
+
+.container .box-comment .content-Comment p#ReplyComment {
+    width: 100%;
+    text-transform: capitalize;
+    font-size: 15px;
+    color: hsl(211, 10%, 45%);
+    line-height: 1.5;
+}
+
+.container .box-comment button,
+.box-comment button.btn-update {
+    background: transparent;
+    outline: none;
+    border: none;
+    text-align: center;
+    width: fit-content;
+    display: flex;
+    gap: 5px;
+    color: var(--Moderate-blue);
+    font-weight: bold;
+    font-size: 15px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.box-comment button.btn-update {
+  color: var(--White);
+  background-color: var(--Moderate-blue);
+  margin: 10px 0px 0px auto;
+  border-radius: 5px;
+  height: 40px;
+  width: 90px;
+  justify-content: center;
+}
+
+.box-comment button.btn-update:hover {
+  opacity: 0.7;
+}
+
+.container .box-comment .controls-btn {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.container .box-comment .controls-btn button.btn-delete {
+  color: var(--Soft-Red);
+  align-items: start;
+}
+
+.container .box-comment .controls-btn button.btn-edit {
+  align-items: start;
+}
+
+.container .box-comment .controls-btn button:hover {
+  opacity: 0.7;
+}
+
+.container .box-comment .content-Comment .headComment span.name {
+    font-weight: bold;
+    color: #333;
+}
+
+.owner-form-reply {
+    background-color: var(--White, #f1f1f1);
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 20px;
+    flex-wrap: wrap;
+    border-radius: 5px;
+}
+
+.owner-form-reply .img-owner,
+.owner-form-reply .img-owner img {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    order: 0;
+}
+
+.owner-form-reply label {
+    flex: 1;
+    order: 1;
+}
+
+.owner-form-reply textarea ,
+.box-comment .content-Comment textarea.text-edit {
+    width: 100%;
+    height: 80px;
+    border-radius: 5px;
+    outline: none;
+    border: 2px solid var(--Grayish-Blue);
+    transition: 0.3s;
+    color: var(--Grayish-Blue);
+    padding: 10px 15px;
+    resize: none;
+}
+
+.owner-form-reply textarea::-webkit-scrollbar,
+.box-comment .content-Comment textarea.text-edit::-webkit-scrollbar {
+    width: 5px;
+}
+
+.owner-form-reply textarea::-webkit-scrollbar-thumb,
+.box-comment .content-Comment textarea.text-edit::-webkit-scrollbar-thumb {
+    background-color: var(--White);
+}
+
+.owner-form-reply textarea::-webkit-scrollbar-track,
+.box-comment .content-Comment textarea.text-edit::-webkit-scrollbar-track {
+    background-color: var(--Moderate-blue);
+}
+
+@media (max-width: 768px) {
+    .owner-form-reply  label {
+        flex-basis: 100%;
+        order: -1;
+    }
+}
+
+.owner-form-reply textarea:focus,
+.box-comment .content-Comment textarea.text-edit:focus {
+    border-color: var(--Moderate-blue);
+}
+
+.owner-form-reply input[type="submit"] {
+    height: 40px;
+    width: 100px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    background-color: var(--Moderate-blue);
+    color: var(--White);
+    font-weight: bold;
+    order: 2;
+    cursor: pointer;
+}
+
+.owner-form-reply input[type="submit"]:hover {
+  opacity: 0.7;
+}
+
+.container-replies {
+  width: 95%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  left: 5%;
+  gap: 10px;
+}
+
+.container-replies::before {
+  content: "";
+  position: absolute;
+  left: calc(-5% / 2);
+  top: 0px;
+  height: 100%;
+  width: 3px;
+  border-radius: 3px;
+  background-color: hsl(223, 19%, 93%);
+}
+
+@media (max-width: 768px) {
+  .container-replies::before {
+    left: -5%;
+  }
+}
+
+span.replyTo {
+  font-weight: bold;
+  color: var(--Moderate-blue);
+}
+
+div.deleteBox {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--White);
+  max-width: 100%;
+  width: 330px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -10;
+  box-shadow: 0px 0px 0px 5000px #111111a4;
+  transition: 0.3s;
+  opacity: 0;
+}
+div.deleteBox.show {
+  z-index: 100;
+  opacity: 1;
+  top: 50%;
+}
+div.deleteBox h3 {
+  margin-top: 5px;
+  color: var(--Dark-blue);
+}
+div.deleteBox p {
+  margin-block: 15px;
+  color: var(--Grayish-Blue);
+  line-height: 1.5;
+}
+div.deleteBox div.group-form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+div.deleteBox .group-form button {
+  border: none;
+  outline: none;
+  color: var(--White);
+  padding: 14px 25px;
+  margin-block-end: 0px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+div.deleteBox .group-form .btn-cancel {
+  background-color: var(--Grayish-Blue);
+}
+div.deleteBox .group-form .btn-delete:last-of-type {
+  background-color: var(--Soft-Red);
+} 
