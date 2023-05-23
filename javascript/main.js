@@ -461,7 +461,7 @@ function createReplay(listBtn) {
 }
 
 // get data with fetch Method
-fetch("data.json")
+fetch("javascript/data.json")
 .then((res) => {
   return res.json();
 })
