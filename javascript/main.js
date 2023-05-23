@@ -404,7 +404,7 @@ function currentAddComment(newComment = {}) {
 function AddContentCommentReply(e) {
   //get the text Area next to the button Clicked
   let textContentComment = e.currentTarget.previousElementSibling.children[0];
-  let replyingTo = textContentComment.getAttribute("data-replyingTo");
+  let replyingTo = textContentComment.getAttribute("data-replyingTo") ?? "";
   if(textContentComment.value.trim() === "" || textContentComment.value === replyingTo)
     return 0;
 
@@ -414,7 +414,7 @@ function AddContentCommentReply(e) {
     img:"images/avatars/image-juliusomo.webp",
     username: "juliusomo",
     createdAt: "now",
-    content: textContentComment.value.slice(replyingTo.length),
+    content: textContentComment.value.slice(replyingTo.length) ?? textContentComment.value,
     replyTo: replyingTo,
   }
 
